@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>保護者会会計 操作手順書</title>
+<meta name="description" content="保育園保護者会の会計スプレッドシート（保護者会会計システム）の会計担当者向け操作手順書">
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --text: #23211d; --muted: #6b675f;
+  --border: #e4e0d6; --accent: #2f6f5e; --accent-soft: #e6f1ec;
+  --warn: #8a5a00; --warn-soft: #fbf1dc; --danger: #a33a2a; --danger-soft: #fbe7e3;
+  --code-bg: #f1eee6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1a18; --surface: #23221f; --text: #ebe8e1; --muted: #a8a399;
+    --border: #3a3833; --accent: #7cc4ad; --accent-soft: #23362f;
+    --warn: #e7b65a; --warn-soft: #3a3020; --danger: #ef8f7f; --danger-soft: #3d2622;
+    --code-bg: #2e2c28;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+  font-size: 16px; line-height: 1.8; -webkit-text-size-adjust: 100%;
+}
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
+nav.toc {
+  position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+  padding: 28px 16px 40px 24px; border-right: 1px solid var(--border); font-size: 14px; line-height: 1.6;
+}
+nav.toc .brand { font-weight: 700; font-size: 15px; margin-bottom: 16px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; }
+nav.toc li { margin: 2px 0; }
+nav.toc a { display: block; padding: 4px 8px; border-radius: 6px; color: var(--muted); text-decoration: none; }
+nav.toc a:hover { background: var(--accent-soft); color: var(--text); }
+nav.toc .group { margin: 14px 0 4px 8px; font-size: 12px; color: var(--muted); letter-spacing: .05em; }
+main { padding: 32px 48px 80px; min-width: 0; }
+header.hero { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 8px; }
+header.hero h1 { font-size: 28px; line-height: 1.4; margin: 0 0 6px; }
+header.hero p { margin: 0; color: var(--muted); }
+h2 { font-size: 22px; margin: 56px 0 12px; padding-top: 8px; border-top: 1px solid var(--border); line-height: 1.5; }
+h2 .num { color: var(--accent); margin-right: 8px; }
+h3 { font-size: 18px; margin: 32px 0 8px; line-height: 1.5; }
+p, ul, ol { margin: 8px 0 14px; }
+a { color: var(--accent); }
+.menu {
+  display: inline-block; padding: 0 6px; border-radius: 4px; background: var(--code-bg);
+  font-size: .92em; white-space: nowrap;
+}
+.menu::before { content: "▸ "; color: var(--muted); }
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: .9em; font-family: ui-monospace, Consolas, monospace; }
+pre { background: var(--code-bg); padding: 12px 14px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; }
+.table-wrap { overflow-x: auto; margin: 10px 0 18px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; background: var(--surface); }
+th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); font-weight: 600; white-space: nowrap; }
+ol.steps { counter-reset: step; list-style: none; padding: 0; }
+ol.steps > li { counter-increment: step; position: relative; padding: 2px 0 10px 42px; }
+ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 2px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent); color: var(--surface); font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.note, .warn, .danger { border-radius: 8px; padding: 10px 14px; margin: 14px 0; border-left: 4px solid; }
+.note { background: var(--accent-soft); border-color: var(--accent); }
+.warn { background: var(--warn-soft); border-color: var(--warn); }
+.danger { background: var(--danger-soft); border-color: var(--danger); }
+.note > b:first-child, .warn > b:first-child, .danger > b:first-child { display: block; margin-bottom: 2px; }
+.warn > b:first-child { color: var(--warn); }
+.danger > b:first-child { color: var(--danger); }
+details { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; margin: 8px 0; }
+details summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 6px; }
+.toc-mobile { display: none; }
+footer { margin-top: 64px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 16px; }
+@media (max-width: 860px) {
+  .layout { display: block; }
+  nav.toc { display: none; }
+  main { padding: 20px 16px 64px; }
+  header.hero h1 { font-size: 23px; }
+  h2 { font-size: 20px; margin-top: 44px; }
+  .toc-mobile { display: block; }
+  .toc-mobile details { margin: 16px 0; }
+  .toc-mobile ol { padding-left: 20px; margin: 4px 0; }
+}
+@media print {
+  nav.toc, .toc-mobile { display: none; }
+  .layout { display: block; }
+  main { padding: 0; }
+  h2 { break-before: page; border-top: none; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" aria-label="目次">
+  <div class="brand">保護者会会計 操作手順書</div>
+  <ol>
+    <li class="group">はじめに</li>
+    <li><a href="#overview">1. このシステムについて</a></li>
+    <li><a href="#before">2. 使い始める前に</a></li>
+    <li><a href="#sheets">3. シートの見方</a></li>
+    <li><a href="#calendar">4. 年間の作業の流れ</a></li>
+    <li class="group">定例の作業</li>
+    <li><a href="#new-year">5. 年度初め（4月）</a></li>
+    <li><a href="#deposit">6. 入金の取込と消込</a></li>
+    <li><a href="#withdrawal">7. 出金の分類</a></li>
+    <li><a href="#outputs">8. 請求リスト・未納リスト</a></li>
+    <li><a href="#year-end">9. 年度末（3月）</a></li>
+    <li class="group">随時の作業</li>
+    <li><a href="#enroll">10. 途中入園</a></li>
+    <li><a href="#withdraw">11. 途中退園と返金</a></li>
+    <li><a href="#parking">12. 駐車場利用の変更</a></li>
+    <li><a href="#special">13. 特別なケース</a></li>
+    <li class="group">その他</li>
+    <li><a href="#first-time">14. 初めて導入するとき</a></li>
+    <li><a href="#trouble">15. 困ったとき</a></li>
+    <li><a href="#appendix">付録：用語と一覧</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>保護者会会計 操作手順書</h1>
+  <p>会計担当者向け｜保護者会費・駐車場利用料の請求、入金の消込、会計報告までの操作をまとめています。</p>
+</header>
+
+<div class="toc-mobile">
+  <details>
+    <summary>目次</summary>
+    <ol>
+      <li><a href="#overview">このシステムについて</a></li>
+      <li><a href="#before">使い始める前に</a></li>
+      <li><a href="#sheets">シートの見方</a></li>
+      <li><a href="#calendar">年間の作業の流れ</a></li>
+      <li><a href="#new-year">年度初め（4月）</a></li>
+      <li><a href="#deposit">入金の取込と消込</a></li>
+      <li><a href="#withdrawal">出金の分類</a></li>
+      <li><a href="#outputs">請求リスト・未納リスト</a></li>
+      <li><a href="#year-end">年度末（3月）</a></li>
+      <li><a href="#enroll">途中入園</a></li>
+      <li><a href="#withdraw">途中退園と返金</a></li>
+      <li><a href="#parking">駐車場利用の変更</a></li>
+      <li><a href="#special">特別なケース</a></li>
+      <li><a href="#first-time">初めて導入するとき</a></li>
+      <li><a href="#trouble">困ったとき</a></li>
+      <li><a href="#appendix">付録：用語と一覧</a></li>
+    </ol>
+  </details>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="overview"><span class="num">1</span>このシステムについて</h2>
+<p>保護者会の会計を、1つの Google スプレッドシート（以下「スプシ」）で管理する仕組みです。スプシに「<b>保護者会会計</b>」という専用メニューが付いていて、面倒な計算や転記はメニューから自動で行えます。</p>
+<p>このシステムでできること：</p>
+<ul>
+  <li>園児・家庭の名簿管理（入園・退園・駐車場利用の変更）</li>
+  <li>保護者会費・駐車場利用料の請求金額の計算と、家庭別の請求リストの作成</li>
+  <li>ゆうちょダイレクトの入出金明細（CSV）の取り込みと、入金と家庭の自動照合（消込）</li>
+  <li>未納家庭の一覧、年度末の収支決算（会計報告）の作成</li>
+</ul>
+<p>このシステムで<b>扱わないこと</b>（システムの外で行います）：</p>
+<ul>
+  <li>現金の取り扱い（すべて銀行口座経由で行う前提です）</li>
+  <li>支払期限・督促の管理、予算管理、駐車場の区画数の管理</li>
+  <li>銀行での振込操作（返金の振込など）</li>
+</ul>
+<div class="note"><b>大切な考え方</b>スプシは人が直接読み書きできる表になっています。メニューは手間を減らすための道具で、データの正本はスプシの表そのものです。メニューが使えないときも、表を手で編集すれば運用を続けられます（<a href="#manual">15章</a>）。</div>
+
+<!-- ============================================================ -->
+<h2 id="before"><span class="num">2</span>使い始める前に</h2>
+
+<h3>スプシを受け取る</h3>
+<p>当年度のスプシ（名前は <code>YYYY年度_保護者会会計</code>）は、前任の会計担当者から Google ドライブの共有で受け取ります。パソコンのブラウザ（Chrome 推奨）で開いてください。スマートフォンのアプリでは専用メニューが表示されません。</p>
+
+<h3>専用メニューの場所</h3>
+<p>スプシを開いて数秒待つと、画面上部の「ヘルプ」の右に <b>保護者会会計</b> メニューが表示されます。表示されないときは、ページを再読み込みしてください。</p>
+<pre>保護者会会計
+├─ 初期設定 ─── 初回セットアップ
+├─ 年度初め ─── 新年度セットアップ / 新入園児一括登録 / 請求金額計算
+├─ 日常業務 ─── 入園処理 / 退園処理 / 駐車場利用変更 /
+│               CSV取込（入出金明細登録）/ 入金消込実行
+└─ 出力更新 ─── 請求リスト更新 / 未納リスト更新 / 会計報告更新</pre>
+<p>この手順書では、メニューの操作を <span class="menu">日常業務 → 入園処理</span> のように書きます。</p>
+
+<h3>初めてメニューを使うときの承認</h3>
+<p>初めてメニューを実行すると「承認が必要です」という画面が出ます。次の手順で許可してください（アカウントごとに最初の1回だけです）。</p>
+<ol class="steps">
+  <li>「続行」を押し、自分の Google アカウントを選ぶ。</li>
+  <li>「このアプリは Google で確認されていません」と表示されたら、「詳細」→「（プロジェクト名）に移動」を押す。保護者会で独自に作ったスクリプトのため、この表示が出ます。</li>
+  <li>求められた権限（スプレッドシートの閲覧・編集、ドライブのファイル操作、メニュー・ダイアログの表示）を確認して「許可」を押す。</li>
+  <li>もう一度、同じメニューを実行する。</li>
+</ol>
+
+<h3>個人情報の取り扱い</h3>
+<div class="danger"><b>必ず守ってください</b>
+<ul>
+  <li>スプシには園児の氏名などの個人情報が入っています。共有は会計担当者と必要最小限の役員だけにしてください。</li>
+  <li>「リンクを知っている全員」での共有は<b>使わないでください</b>。</li>
+  <li>担当者が交代するときは、新しい担当者に権限（オーナー権限を含む）を渡し、旧担当者の権限を外します。前年度以前のアーカイブファイルも同じように権限を管理します。</li>
+</ul></div>
+
+<!-- ============================================================ -->
+<h2 id="sheets"><span class="num">3</span>シートの見方</h2>
+<p>スプシには次の10枚のシートがあります。「手で編集」の欄は、担当者が直接書き換えてよいかどうかの目安です。</p>
+<div class="table-wrap"><table>
+<tr><th>シート</th><th>内容</th><th>手で編集</th></tr>
+<tr><td>設定</td><td>年度、会費・駐車場料の月額、前年度繰越金など</td><td>○（年度初めに入力）</td></tr>
+<tr><td>園児マスタ</td><td>在園児の名簿（クラス・氏名・入園年月・退園年月）</td><td>△（入退園はメニューで）</td></tr>
+<tr><td>家庭マスタ</td><td>家庭ごとの識別子・駐車場利用・振込人名義</td><td>○（駐車場利用・振込人名義・識別子の確定）</td></tr>
+<tr><td>請求</td><td>園児ごとの会費、家庭ごとの駐車場料の請求記録</td><td>△（減免などの調整のみ）</td></tr>
+<tr><td>入出金明細</td><td>銀行口座の全取引の台帳</td><td>△（通常はCSV取込で登録）</td></tr>
+<tr><td>入金消込</td><td>入金がどの家庭の何の支払いかの記録</td><td>○（未照合行の処理、損金の計上）</td></tr>
+<tr><td>出金分類</td><td>出金の種別（駐車場賃料・事務費・返金など）</td><td>○（種別の修正）</td></tr>
+<tr><td>[出力]請求リスト</td><td>家庭別の請求金額一覧（配布用）</td><td>×（メニューで更新）</td></tr>
+<tr><td>[出力]未納リスト</td><td>未払いが残っている家庭の一覧</td><td>×（メニューで更新）</td></tr>
+<tr><td>[出力]会計報告</td><td>収支決算・入金一覧（監査用）</td><td>×（メニューで更新）</td></tr>
+</table></div>
+<div class="warn"><b>[出力] シートは編集できません</b>[出力] で始まるシートは保護されていて、メニューを実行するたびに全体が作り直されます。手で書き込んでも次の更新で消えるので、修正は元のシート（請求・入金消込など）で行ってください。</div>
+<div class="note"><b>ID について</b>園児・家庭・請求などには <code>C-26-001</code> のような ID が自動で付きます。ID は書き換えないでください（形式は<a href="#appendix">付録</a>）。</div>
+
+<!-- ============================================================ -->
+<h2 id="calendar"><span class="num">4</span>年間の作業の流れ</h2>
+<div class="table-wrap"><table>
+<tr><th>時期</th><th>作業</th><th>参照</th></tr>
+<tr><td>3月末〜4月</td><td>新年度セットアップ、月額の設定、新入園児の登録、駐車場アンケートの反映、請求金額計算</td><td><a href="#new-year">5章</a></td></tr>
+<tr><td>5月</td><td>請求リストを出力して各家庭に配布</td><td><a href="#outputs">8章</a></td></tr>
+<tr><td>随時（月1回程度）</td><td>ゆうちょダイレクトのCSVを取り込み、入金を消込、出金を分類、未納リストを確認</td><td><a href="#deposit">6章</a>・<a href="#withdrawal">7章</a></td></tr>
+<tr><td>随時</td><td>途中入園、途中退園と返金、駐車場利用の開始・停止</td><td><a href="#enroll">10</a>〜<a href="#parking">12章</a></td></tr>
+<tr><td>3月</td><td>督促、未納の損金計上、会計報告の作成、会計監査</td><td><a href="#year-end">9章</a></td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="new-year"><span class="num">5</span>年度初め（4月）</h2>
+<div class="warn"><b>始める前に</b>新年度セットアップは、前年度の<a href="#year-end">年度末の作業（9章）</a>がすべて終わってから行います。未納が残っている（損金を計上していない）家庭があると、セットアップは中止されます。また、前年度繰越金は [出力]会計報告 の「次年度繰越」から転記されるので、最後の取込・消込の後に<b>会計報告更新を実行してから</b>セットアップしてください。</div>
+
+<ol class="steps">
+  <li><b>月額を決める</b><br>保護者会費（園児1人あたりの月額）と駐車場利用料（1家庭あたりの月額）を決めておきます。</li>
+  <li><b>新年度セットアップを実行する</b><br><span class="menu">年度初め → 新年度セットアップ</span> を実行し、確認画面で「はい」を押します。次のことが自動で行われます。
+    <ul>
+      <li>今のスプシのコピーが <code>YYYY年度_保護者会会計_アーカイブ</code> という名前で同じフォルダに作られる（閲覧専用）</li>
+      <li>在園児が1つ上のクラスに進級する（さくら組は卒園としてはずれる）</li>
+      <li>家庭マスタの長子・識別子が更新される</li>
+      <li>前年度の「次年度繰越」が設定シートの「前年度繰越金」に転記される</li>
+      <li>年度が更新され、会費・駐車場料の月額と駐車場賃貸事業者名カナが空欄になる</li>
+    </ul>
+    今のスプシのファイル名は変わらないので、ファイル名を新しい年度（例：<code>2027年度_保護者会会計</code>）に変更してください。
+  </li>
+  <li><b>設定シートを入力・確認する</b><br>「保護者会費（月額/園児）」「駐車場利用料（月額/家庭）」「駐車場賃貸事業者名カナ」を入力します。駐車場賃貸事業者名カナは前年度と同じなら、アーカイブの設定シートからコピーしてください（<a href="#withdrawal">7章</a>）。「前年度繰越金」が前年度の会計報告の「次年度繰越」と一致しているかも確認します。</li>
+  <li><b>新入園児を一括登録する</b><br>新入園児の CSV を用意して（下の「新入園児CSVの作り方」）、<span class="menu">年度初め → 新入園児一括登録</span> から CSV ファイルを選び「一括登録」を押します。最後に登録数とスキップ数が表示されます。</li>
+  <li><b>駐車場利用アンケートを反映する</b><br>Google フォームなどで集めた駐車場利用の希望を、家庭マスタの「駐車場利用」列に <code>○</code> か <code>×</code> で入力します。前年度の値が残っているので、全家庭分を見直してください。新入園で増えた家庭は <code>×</code> になっています。</li>
+  <li><b>識別子の重複を確認する</b><br>家庭マスタの備考に <code>【要確認】識別子が家庭 F-xx-xxx と重複</code> と出ている家庭があれば、その家庭の「識別子」を手で決めて入力します（<a href="#dup-id">13章</a>）。</li>
+  <li><b>振込人名義を確認する</b><br>新しい家庭の「振込人名義」は、最初の入金があったときに CSV の表記に合わせて入力します（<a href="#deposit">6章</a>）。</li>
+  <li><b>請求金額を計算する</b><br><span class="menu">年度初め → 請求金額計算</span> を実行します。請求シートに、園児ごとの会費と、駐車場利用家庭ごとの駐車場料の行が作られます。</li>
+  <li><b>請求リストを出力する</b><br><span class="menu">出力更新 → 請求リスト更新</span> を実行し、[出力]請求リストを印刷・配布します（5月請求）。</li>
+</ol>
+
+<h3 id="csv-students">新入園児CSVの作り方</h3>
+<p>1行目に見出し、2行目以降に1人1行で書きます。列の順番は変えないでください。</p>
+<pre>姓,名,姓かな,名かな,クラス,きょうだい園児ID
+山田,はな,やまだ,はな,ひよこ組,
+山田,そら,やまだ,そら,たんぽぽ組,C-26-012
+Smith,Emma,,エマ,つくし組,</pre>
+<div class="table-wrap"><table>
+<tr><th>列</th><th>書き方</th></tr>
+<tr><td>姓・名</td><td>漢字（外国籍の方はそのままの表記で可）</td></tr>
+<tr><td>姓かな・名かな</td><td>日本人名はひらがな、外国人名はカタカナ。姓がない場合は空欄。</td></tr>
+<tr><td>クラス</td><td>ひよこ組／つくし組／たんぽぽ組／すみれ組／ゆり組／さくら組 のどれか</td></tr>
+<tr><td>きょうだい園児ID</td><td>きょうだいがすでに在園していれば、その子の園児ID（園児マスタのA列）。いなければ空欄（新しい家庭として登録されます）。</td></tr>
+</table></div>
+<div class="warn"><b>文字コードは UTF-8 で保存してください</b>Google スプレッドシートで表を作り、<b>ファイル → ダウンロード → カンマ区切り形式（.csv）</b> で保存するのが確実です。Excel で作る場合は「CSV UTF-8（コンマ区切り）」を選んでください。普通の「CSV」で保存すると文字化けします。</div>
+<div class="note"><b>双子の場合</b>同じクラスなので、どちらを長子にするかは CSV の行の順番で決まります。2人目の「きょうだい園児ID」には1人目の園児IDが必要なので、まず1人目だけの CSV を登録して園児IDを確認し、次に2人目の CSV（きょうだい園児ID に1人目のID）を登録してください。</div>
+
+<!-- ============================================================ -->
+<h2 id="deposit"><span class="num">6</span>入金の取込と消込</h2>
+<p>銀行口座の入出金をスプシに取り込み、入金を「どの家庭の何の支払いか」に結びつける作業（消込）です。月1回程度、入金が増える5〜6月はこまめに行うと楽です。</p>
+
+<h3>CSVを取り込む</h3>
+<ol class="steps">
+  <li><b>ゆうちょダイレクトからCSVをダウンロードする</b><br>ゆうちょダイレクトにログインし、入出金明細の照会画面で期間を指定して CSV をダウンロードします。一度に全期間は取れないので、前回取り込んだ日以降を指定します。期間が前回と重なっても、同じ取引は二重に登録されません。</li>
+  <li><b>取り込む</b><br><span class="menu">日常業務 → CSV取込（入出金明細登録）</span> を実行し、ダウンロードした CSV を選んで「取込実行」を押します。CSV はそのまま（Shift-JIS のまま）選んでください。</li>
+  <li><b>結果を確認する</b><br>「取込完了: X件（入金Y件・出金Z件）、未照合W件」と表示されます。残高のつながりがおかしいという警告が出た場合は、取り込んでいない期間がないか確認し、抜けている期間の CSV を取り込んでください。</li>
+</ol>
+<p>取り込むと、次のように自動で処理されます。</p>
+<ul>
+  <li>すべての取引が「入出金明細」に追加される</li>
+  <li>入金は「入金消込」に追加される。振込人名義が家庭マスタと<b>完全に一致</b>し、かつ金額がその家庭の未納額と<b>ぴったり一致</b>したものだけ、自動で家庭に結びつけられる（照合方法＝自動）</li>
+  <li>それ以外の入金は「照合方法＝未照合」として残る（次の手順で手作業）</li>
+  <li>出金は「出金分類」に追加される（<a href="#withdrawal">7章</a>）</li>
+</ul>
+
+<h3>未照合の入金を処理する</h3>
+<ol class="steps">
+  <li>「入金消込」シートを開き、<b>照合方法が「未照合」</b>の行を探します（フィルタを使うと便利です）。</li>
+  <li>入出金明細ID から「入出金明細」シートの同じ ID の行を見て、摘要2（振込人名義）と金額を確認し、どの家庭からの入金か特定します。名義は一致したが金額が違う場合は、備考に候補の家庭IDが書かれています。</li>
+  <li>「家庭ID」列に家庭IDを入力します。</li>
+  <li>「消込種別」を確認します（会費／駐車場利用料 など。<a href="#appendix">付録</a>参照）。</li>
+  <li>「照合方法」を <b>手動</b> に変更します。これで処理完了です。</li>
+</ol>
+
+<div class="note"><b>会費と駐車場料をまとめて振り込まれた場合</b>1件の入金を2行に分けます。同じ入出金明細IDで行をもう1行追加し、1行目を「会費」、2行目を「駐車場利用料」にして、それぞれの金額を入れます。2行の消込金額の合計が入金額と一致しているか確認してください。新しい行の消込IDは、一番下の行の続き番号にします。</div>
+<div class="note"><b>分割払い・不足分の追加払い</b>入金ごとに消込行を作ればよく、特別な操作は要りません。未納リストは「請求の合計 − 消込済みの合計」で計算されるので、何回に分けて払われても正しく反映されます。</div>
+<div class="note"><b>会費・駐車場料以外の入金</b>家庭IDは空欄のまま、消込種別を設定して照合方法を「手動」にします。銀行の利息は「受取利子」、寄付や雑収入は「その他収入」です。</div>
+
+<h3>振込人名義を登録・修正する</h3>
+<p>家庭マスタの「振込人名義」は、CSV の摘要2と<b>1文字も違わず一致</b>したときだけ自動照合に使われます。新しい家庭の最初の入金を手で消込したら、その摘要2をコピーして家庭マスタの「振込人名義」に貼り付けておくと、次回から自動で照合されます。</p>
+<ul>
+  <li>他の銀行からの振込は通常カタカナ（例：<code>ヤマダ　タロウ</code>）、ゆうちょ銀行からの振込は漢字の「姓　名」になります。スペースの有無も含めて CSV のとおりに入力してください。</li>
+  <li>祖父母名義での振込など、名義が家庭マスタと違う入金は毎回手作業になります。</li>
+  <li>同じ名義が複数の家庭に登録されていると、その名義は自動照合されません（誤りを防ぐため）。</li>
+</ul>
+
+<h3>「入金消込実行」メニューについて</h3>
+<p><span class="menu">日常業務 → 入金消込実行</span> は、未照合のまま残っている入金について、名義と金額による自動照合をもう一度試します。振込人名義を後から登録・修正したときに使ってください。</p>
+
+<!-- ============================================================ -->
+<h2 id="withdrawal"><span class="num">7</span>出金の分類</h2>
+<p>CSV を取り込むと、出金は「出金分類」シートに追加されます。</p>
+<ul>
+  <li>摘要2が設定シートの「駐車場賃貸事業者名カナ」と完全に一致する出金は、自動で「駐車場賃料」になります。</li>
+  <li>それ以外はいったん「その他支出」になるので、内容を見て正しい出金種別（事務費・慶弔費・図書費・手数料・返金・その他支出）に直し、「支払先・返金先」も入力してください。</li>
+  <li>返金の場合は「家庭ID」を入力し、備考に退園返金か誤入金返金かを書きます。</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="outputs"><span class="num">8</span>請求リスト・未納リスト</h2>
+<p>[出力] シートは自動では更新されません。元のシートを変更したら、必要なリストをメニューから更新してください。</p>
+<div class="table-wrap"><table>
+<tr><th>メニュー</th><th>出力される内容</th><th>使うタイミング</th></tr>
+<tr><td><span class="menu">出力更新 → 請求リスト更新</span></td><td>家庭ごとの識別子、在園児数、駐車場利用、会費合計、駐車場料、請求合計、請求日</td><td>5月の一斉請求、途中入園・駐車場利用開始の後</td></tr>
+<tr><td><span class="menu">出力更新 → 未納リスト更新</span></td><td>未納額が残っている家庭の、請求合計・入金済み合計・未納額</td><td>消込の後、督促の前</td></tr>
+<tr><td><span class="menu">出力更新 → 会計報告更新</span></td><td>収支決算、出金一覧、入金一覧、口座残高との照合結果</td><td>年度末（期中に途中経過を見てもよい）</td></tr>
+</table></div>
+<div class="note"><b>識別子とは</b>家庭を見分けるための名前で、ふつうは「長子のクラス_姓長子の名」（例：<code>たんぽぽ組_山田そら</code>）です。長子は家庭内でいちばん上のクラスにいる園児です。請求リストなどの配布物に印刷されます。</div>
+
+<!-- ============================================================ -->
+<h2 id="year-end"><span class="num">9</span>年度末（3月）</h2>
+<ol class="steps">
+  <li><b>最後の取込と消込</b><br>3月末までの CSV を取り込み、未照合の入金をすべて処理します（<a href="#deposit">6章</a>）。出金分類も確認します。</li>
+  <li><b>督促</b><br>未納リストを更新し、未払いの家庭に連絡します（システムの外での作業）。</li>
+  <li><b>未納を損金として計上する</b><br>年度末まで払われなかった未納額は、<b>必ず</b>損金として計上します（翌年度に繰り越して請求はしません）。「入金消込」シートの一番下に、家庭ごとに1行追加します。
+    <div class="table-wrap"><table>
+      <tr><th>列</th><th>入力する値</th></tr>
+      <tr><td>消込ID</td><td>一番下の行の続き番号（例：M-26-0123 の次は M-26-0124）</td></tr>
+      <tr><td>入出金明細ID</td><td>空欄（銀行の取引がないため）</td></tr>
+      <tr><td>家庭ID</td><td>未納の家庭の家庭ID</td></tr>
+      <tr><td>消込金額</td><td>未納額</td></tr>
+      <tr><td>消込種別</td><td>損金</td></tr>
+      <tr><td>照合方法</td><td>手動</td></tr>
+      <tr><td>消込日</td><td>計上した日（YYYY-MM-DD）</td></tr>
+    </table></div>
+    未納リストを更新し、すべての家庭が消えたことを確認します。
+  </li>
+  <li><b>会計報告を作成する</b><br><span class="menu">出力更新 → 会計報告更新</span> を実行します。完了メッセージの「口座残高照合」が <b>一致</b> になっていることを確認してください。「不一致（差額 ±N円）」の場合は、CSV の取り込み漏れ、未処理の入金、前年度繰越金の誤りがないか調べます。</li>
+  <li><b>会計監査</b><br>監査役に [出力]会計報告 の入金一覧・出金一覧と通帳を突き合わせてもらいます。</li>
+  <li><b>会計報告書の作成</b><br>出力をもとに総会用の会計報告書を作ります。「次年度繰越」の金額を控えておきます。</li>
+</ol>
+<p>ここまで終わったら、新年度のセットアップ（<a href="#new-year">5章</a>）に進めます。</p>
+<div class="note"><b>会計報告は期中にも実行できます</b>途中経過の確認に使えます。ただし期中は消込前の入金が収入に入らないため、残高照合が「不一致」になることがありますが、異常ではありません。</div>
+
+<!-- ============================================================ -->
+<h2 id="enroll"><span class="num">10</span>途中入園</h2>
+<ol class="steps">
+  <li><span class="menu">日常業務 → 入園処理</span> を実行し、姓・名・姓かな・名かな・クラス・入園年月（例：<code>2026-07</code>）を入力します。きょうだいが在園している場合は「きょうだい在園」欄にその子の園児IDを入力します（いなければ空欄）。「登録」を押します。</li>
+  <li>入園の翌月に <span class="menu">年度初め → 請求金額計算</span> を実行します。その園児の会費の請求行が追加されます（すでにある請求行はそのままで、二重に請求されることはありません）。</li>
+  <li><span class="menu">出力更新 → 請求リスト更新</span> を実行し、その家庭に請求します。</li>
+</ol>
+<div class="note"><b>途中入園の会費</b>入園した月から3月までの月数分です（日割りはしません）。例：7月入園なら 7月〜3月の9か月分を、8月に請求します。</div>
+
+<!-- ============================================================ -->
+<h2 id="withdraw"><span class="num">11</span>途中退園と返金</h2>
+<ol class="steps">
+  <li><span class="menu">日常業務 → 退園処理</span> を実行し、園児IDと退園年月（例：<code>2026-09</code>）を入力して「退園処理」を押します。
+    <ul>
+      <li>その園児の会費の請求が、在園した月数（入園月〜退園月、どちらも含む）に減額されます。</li>
+      <li>家庭に在園児がいなくなり、駐車場の請求がある場合は、駐車場の請求も減額されます。</li>
+      <li>画面に<b>返金予定額</b>（支払済みの会費 − 在園月数分の会費）が表示されるので、控えておきます。</li>
+    </ul>
+  </li>
+  <li>返金予定額を銀行からその家庭に振り込みます（システムの外での作業）。</li>
+  <li>振込後、ゆうちょダイレクトの CSV を取り込みます（<a href="#deposit">6章</a>）。</li>
+  <li>「出金分類」シートでその出金の出金種別を <b>返金</b> に直し、家庭IDを入力し、備考に「退園返金」と書きます。</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="parking"><span class="num">12</span>駐車場利用の変更</h2>
+<ol class="steps">
+  <li><span class="menu">日常業務 → 駐車場利用変更</span> を実行し、家庭ID、変更区分（開始／停止）、適用年月（例：<code>2026-08</code>）を入力して「変更を反映」を押します。</li>
+  <li><b>開始の場合</b>：<span class="menu">年度初め → 請求金額計算</span> を実行します。適用年月から3月までの駐車場料の請求行が追加されます。<br><b>停止の場合</b>：その家庭の駐車場料の請求が、利用開始から停止した月までの月数に自動で減額されます。払いすぎの金額が表示されたら、退園の返金と同じ手順（<a href="#withdraw">11章</a>の2〜4）で返金します。</li>
+  <li>請求リスト・未納リストを更新します。</li>
+</ol>
+<p>開始の月・停止の月はどちらも1か月分として計算します（日割りはしません）。</p>
+
+<!-- ============================================================ -->
+<h2 id="special"><span class="num">13</span>特別なケース</h2>
+
+<details id="dup-id"><summary>識別子が他の家庭と重複した</summary>
+<p>姓・長子の名・長子のクラスが同じ家庭が2つあると、識別子が同じになり配布物で取り違えるおそれがあります。この場合は識別子が自動で作られず、家庭マスタの備考に <code>【要確認】識別子が家庭 F-xx-xxx と重複</code> と書かれます。</p>
+<p>その家庭の「識別子」列に、保護者が見分けられる名前を手で入力してください（例：<code>たんぽぽ組_山田そら（はな姉）</code>）。手で入力した識別子は、進級や長子の変更があっても上書きされません。</p>
+</details>
+
+<details><summary>双子が入園した・双子の片方が退園した</summary>
+<p><b>入園</b>：1人目を登録して園児IDを確認し、2人目の登録時に「きょうだい在園」欄（一括登録なら「きょうだい園児ID」列）に1人目の園児IDを入れます。先に登録した1人目が長子になります。</p>
+<p><b>片方の退園</b>：長子だった方が退園すると、もう1人が自動で長子になり、識別子の名前の部分が更新されます。</p>
+</details>
+
+<details><summary>一時退園した園児が復園した（育休など）</summary>
+<p>新しく入園処理はしません。園児マスタでその園児の「退園年月」を消して空欄にします（園児IDはそのまま）。休んでいた期間の会費は、請求シートのその園児の行の「対象月数」と「請求金額」を手で直し、備考に <code>YYYY-MM復園・調整</code> と書きます。手で直した請求行は、請求金額計算を実行しても上書きされません。</p>
+</details>
+
+<details><summary>入園を取りやめた（登録したが通園しなかった）</summary>
+<p>行は削除せず、退園処理で「退園年月」を入園年月と同じ月にします。すでに請求行がある場合は、対象月数と請求金額を 0 にし、備考に <code>入園辞退・無請求</code> と書きます。</p>
+</details>
+
+<details><summary>会費の減免・割引をしたい</summary>
+<p>専用の機能はありません。請求シートのその行の「対象月数」または「請求金額」を手で直し、備考に理由を書いてください。</p>
+</details>
+
+<details><summary>間違って振り込まれた（誤入金）</summary>
+<ol>
+  <li>入金消込シートのその入金の行の消込種別を <b>誤入金</b> にし、照合方法を「手動」にします。</li>
+  <li>振込手数料を差し引いた金額を返金します。</li>
+  <li>返金の出金を CSV で取り込んだら、出金分類で出金種別を <b>返金</b> にし、備考に「誤入金返金」と振込手数料の金額を書きます。</li>
+</ol>
+</details>
+
+<details><summary>前年度の未納分が新年度に振り込まれた</summary>
+<p>前年度に損金として計上した未納分が新年度に払われたときは、新年度の入金消込で消込種別を <b>その他収入</b> にします。家庭IDは入れてかまいません。備考に「前年度未納分」と書いてください。前年度のアーカイブは修正しません。</p>
+</details>
+
+<details><summary>CSVにない取引を登録したい</summary>
+<p>入出金明細シートの一番下に手で行を追加します（明細IDは続き番号、登録方法は「手入力」、CSV明細番号は空欄）。そのうえで入金なら入金消込、出金なら出金分類に、その明細IDの行を手で追加します。</p>
+</details>
+
+<!-- ============================================================ -->
+<h2 id="first-time"><span class="num">14</span>初めて導入するとき</h2>
+<p>前年度のスプシがない最初の年だけの手順です。2年目以降は<a href="#new-year">5章</a>の手順を使います。</p>
+<ol class="steps">
+  <li>システムが入った空のスプシを開くと「このスプレッドシートは未初期化です」と表示されます。<span class="menu">初期設定 → 初回セットアップ</span> を実行します（すでにデータがある場合は中止されます）。</li>
+  <li>設定シートに、年度、保護者会費・駐車場料の月額、駐車場賃貸事業者名カナ、前年度繰越金（発足時に持っているお金。なければ 0）を入力します。</li>
+  <li><b>全在園児</b>（ひよこ組〜さくら組の全員）を CSV にして、<span class="menu">年度初め → 新入園児一括登録</span> で登録します（<a href="#csv-students">CSVの作り方</a>）。初年度だけは新入園児ではなく全員が対象です。</li>
+  <li>以降は<a href="#new-year">5章</a>の手順5（駐車場アンケートの反映）から続けます。</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="trouble"><span class="num">15</span>困ったとき</h2>
+
+<details><summary>「保護者会会計」メニューが表示されない</summary>
+<p>パソコンのブラウザで開いているか確認し、ページを再読み込みしてください。スマートフォンのアプリには表示されません。</p>
+</details>
+
+<details><summary>エラーのメッセージが出た</summary>
+<p>メッセージに書かれている原因（入力の形式、存在しないIDなど）を直して、もう一度実行してください。エラーで止まった場合、データは変更されていません。原因がわからないときは、メッセージの画面を撮って開発担当に相談してください。</p>
+</details>
+
+<details><summary>間違えて編集・実行してしまった</summary>
+<p>スプシの <b>ファイル → 変更履歴 → 変更履歴を表示</b> から、操作する前の版に戻せます。期中の自動バックアップはないので、大きな操作の前にはこの方法で戻せることを覚えておいてください。</p>
+</details>
+
+<details><summary>同じCSVを2回取り込んでしまった</summary>
+<p>問題ありません。同じ取引（CSV明細番号が同じ）は自動でスキップされ、二重には登録されません。</p>
+</details>
+
+<details><summary>請求金額計算を何回も実行してしまった</summary>
+<p>問題ありません。すでにある請求行はスキップされ、まだ請求行がない園児・家庭の分だけが追加されます。</p>
+</details>
+
+<details><summary>会計報告の残高照合が「不一致」になる</summary>
+<p>次の順で確認してください。</p>
+<ol>
+  <li>年度の全期間の CSV を取り込んだか（取込時の残高つながりの警告も確認）</li>
+  <li>入金消込に「未照合」の行が残っていないか</li>
+  <li>設定シートの前年度繰越金が、前年度の会計報告の次年度繰越と一致しているか</li>
+  <li>CSV にない取引（現金のやりとりなど）がないか</li>
+</ol>
+</details>
+
+<h3 id="manual">メニューが使えないときの手作業での運用</h3>
+<p>スクリプトが動かなくなっても、スプシの表を直接編集して運用を続けられます。</p>
+<ul>
+  <li>新しい行の ID は、そのシートの一番下の ID の続き番号にする</li>
+  <li>入出金明細に取引を手で入力したら、入金消込または出金分類にも手で行を追加する</li>
+  <li>[出力] シートの保護を外し（<b>データ → シートと範囲を保護</b>）、SUMIF などの関数で集計して記入する</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="appendix"><span class="num">付録</span>用語と一覧</h2>
+
+<h3>消込種別（入金消込シート）</h3>
+<div class="table-wrap"><table>
+<tr><th>種別</th><th>使う場面</th><th>家庭ID</th></tr>
+<tr><td>会費</td><td>保護者会費の入金</td><td>入れる</td></tr>
+<tr><td>駐車場利用料</td><td>駐車場利用料の入金</td><td>入れる</td></tr>
+<tr><td>受取利子</td><td>銀行の利息</td><td>空欄</td></tr>
+<tr><td>その他収入</td><td>寄付・雑収入、前年度未納分の入金</td><td>空欄（前年度未納分は入れてよい）</td></tr>
+<tr><td>誤入金</td><td>間違って振り込まれた入金（返金するもの）</td><td>わかれば入れる</td></tr>
+<tr><td>損金</td><td>年度末まで払われなかった未納額（入金ではない）</td><td>入れる</td></tr>
+</table></div>
+
+<h3>照合方法（入金消込シート）</h3>
+<div class="table-wrap"><table>
+<tr><th>値</th><th>意味</th></tr>
+<tr><td>自動</td><td>CSV取込時に名義と金額で自動的に結びつけられた</td></tr>
+<tr><td>手動</td><td>担当者が確認して結びつけた（処理完了）</td></tr>
+<tr><td>未照合</td><td>まだ処理していない（要対応）</td></tr>
+</table></div>
+
+<h3>出金種別（出金分類シート）</h3>
+<p>駐車場賃料／事務費／慶弔費／図書費／手数料／返金／その他支出</p>
+
+<h3>ID の形式</h3>
+<div class="table-wrap"><table>
+<tr><th>対象</th><th>形式</th><th>例</th></tr>
+<tr><td>園児</td><td>C-年度下2桁-3桁</td><td>C-26-001</td></tr>
+<tr><td>家庭</td><td>F-年度下2桁-3桁</td><td>F-26-001</td></tr>
+<tr><td>請求</td><td>B-年度下2桁-4桁</td><td>B-26-0001</td></tr>
+<tr><td>入出金明細</td><td>T-年度下2桁-4桁</td><td>T-26-0001</td></tr>
+<tr><td>入金消込</td><td>M-年度下2桁-4桁</td><td>M-26-0001</td></tr>
+<tr><td>出金分類</td><td>E-年度下2桁-4桁</td><td>E-26-0001</td></tr>
+</table></div>
+
+<h3>請求金額の決まり方</h3>
+<ul>
+  <li><b>保護者会費</b>：園児1人ごと。4月より前から在園している園児は12か月分。途中入園は入園月〜3月の月数分。</li>
+  <li><b>駐車場利用料</b>：駐車場利用が ○ の家庭ごと。長子の入園月（年度途中から利用を始めた場合は利用開始月）〜3月の月数分。</li>
+  <li>どちらも月単位で、日割りはしません。開始の月・終了の月も1か月分です。</li>
+</ul>
+
+<footer>
+  この手順書に個人情報やスプレッドシートのURLは載せていません。スプレッドシートは担当者間の引き継ぎで受け取ってください。
+</footer>
+</main>
+</div>
+</body>
+</html>
